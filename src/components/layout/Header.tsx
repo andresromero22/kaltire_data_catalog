@@ -3,12 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
-import { tables } from "@/data/tables";
 import { measures } from "@/data/measures";
 import Link from "next/link";
 
 type Result = {
-  type: "table" | "measure";
   id: string;
   name: string;
   subtitle: string;
@@ -16,26 +14,12 @@ type Result = {
 };
 
 function buildIndex(): Result[] {
-  const results: Result[] = [];
-  tables.forEach((t) =>
-    results.push({
-      type: "table",
-      id: t.id,
-      name: t.name,
-      subtitle: t.category,
-      href: `/tables/${t.id}`,
-    })
-  );
-  measures.forEach((m) =>
-    results.push({
-      type: "measure",
-      id: m.id,
-      name: m.name,
-      subtitle: m.folder,
-      href: `/measures/${m.id}`,
-    })
-  );
-  return results;
+  return measures.map((m) => ({
+    id: m.id,
+    name: m.name,
+    subtitle: m.folder,
+    href: `/definitions/${m.id}`,
+  }));
 }
 
 const searchIndex = buildIndex();
@@ -79,7 +63,7 @@ export default function Header() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search tables, measures… (⌘K)"
+          placeholder="Search definitions… (⌘K)"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -114,14 +98,8 @@ export default function Header() {
                   setQuery("");
                 }}
               >
-                <span
-                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                    r.type === "table"
-                      ? "bg-[#fff0e6] text-[#ff6900]"
-                      : "bg-[#F2F2F2] text-[#808285]"
-                  }`}
-                >
-                  {r.type === "table" ? "Table" : "Measure"}
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F2F2F2] text-[#808285]">
+                  Definition
                 </span>
                 <div>
                   <p className="text-sm font-medium text-[#000000]">{r.name}</p>
