@@ -1,17 +1,13 @@
 import Link from "next/link";
-import { Table2, BarChart3, Bot, ArrowRight, Database, Layers } from "lucide-react";
-import { tables } from "@/data/tables";
+import { BarChart3, Bot, ArrowRight, Layers } from "lucide-react";
 import { measures, measureFolders } from "@/data/measures";
 
 const stats = [
-  { label: "Tables", value: tables.length, icon: Table2, href: "/tables" },
-  { label: "Measures", value: measures.length, icon: BarChart3, href: "/measures" },
-  { label: "Measure Folders", value: measureFolders.length, icon: Layers, href: "/measures" },
-  { label: "Schemas", value: 1, icon: Database, href: "/tables" },
+  { label: "Definitions", value: measures.length, icon: BarChart3, href: "/definitions" },
+  { label: "Folders", value: measureFolders.length, icon: Layers, href: "/definitions" },
 ];
 
-const recentTables = tables.slice(0, 4);
-const recentMeasures = measures.slice(0, 4);
+const recentMeasures = measures.slice(0, 6);
 
 export default function HomePage() {
   return (
@@ -34,28 +30,22 @@ export default function HomePage() {
             Kaltire Data Catalog
           </h1>
           <p className="text-[#808285] max-w-xl text-sm leading-relaxed">
-            Explore tables, columns, and measures from the Power BI Service Delivery model.
-            Find definitions, understand data lineage, and navigate directly to reports.
+            Explore measure definitions from the Power BI Service Delivery model.
+            Find descriptions, understand usage, and navigate directly to reports.
           </p>
           <div className="flex gap-3 mt-6">
             <Link
-              href="/tables"
+              href="/definitions"
               className="flex items-center gap-2 bg-[#ff6900] hover:bg-[#cc5400] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
             >
-              Browse Tables <ArrowRight size={15} />
-            </Link>
-            <Link
-              href="/measures"
-              className="flex items-center gap-2 bg-[#000000] hover:bg-[#333333] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
-            >
-              Browse Measures
+              Browse Definitions <ArrowRight size={15} />
             </Link>
           </div>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {stats.map(({ label, value, icon: Icon, href }) => (
           <Link
             key={label}
@@ -77,80 +67,39 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Recent content */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Tables */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-[#000000]">Tables</h2>
-            <Link
-              href="/tables"
-              className="text-xs text-[#ff6900] font-medium hover:underline flex items-center gap-1"
-            >
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {recentTables.map((t) => (
-              <Link
-                key={t.id}
-                href={`/tables/${t.id}`}
-                className="flex items-center gap-3 bg-[#F2F2F2] hover:bg-white hover:border-[#e5e5e5] border border-transparent rounded-xl px-4 py-3 transition-all group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm">
-                  <Table2 size={15} className="text-[#ff6900]" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-[#000000] truncate">
-                    {t.name}
-                  </p>
-                  <p className="text-xs text-[#808285]">
-                    {t.category} · {t.columns.length} columns
-                  </p>
-                </div>
-                <ArrowRight
-                  size={14}
-                  className="ml-auto text-[#808285] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                />
-              </Link>
-            ))}
-          </div>
+      {/* Recent definitions */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-semibold text-[#000000]">Definitions</h2>
+          <Link
+            href="/definitions"
+            className="text-xs text-[#ff6900] font-medium hover:underline flex items-center gap-1"
+          >
+            View all <ArrowRight size={12} />
+          </Link>
         </div>
-
-        {/* Measures */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-[#000000]">Measures</h2>
+        <div className="space-y-2">
+          {recentMeasures.map((m) => (
             <Link
-              href="/measures"
-              className="text-xs text-[#ff6900] font-medium hover:underline flex items-center gap-1"
+              key={m.id}
+              href={`/definitions/${m.id}`}
+              className="flex items-center gap-3 bg-[#F2F2F2] hover:bg-white hover:border-[#e5e5e5] border border-transparent rounded-xl px-4 py-3 transition-all group"
             >
-              View all <ArrowRight size={12} />
+              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm">
+                <BarChart3 size={15} className="text-[#808285]" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-[#000000] truncate">
+                  {m.name}
+                </p>
+                <p className="text-xs text-[#808285]">{m.folder}</p>
+              </div>
+              <ArrowRight
+                size={14}
+                className="ml-auto text-[#808285] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+              />
             </Link>
-          </div>
-          <div className="space-y-2">
-            {recentMeasures.map((m) => (
-              <Link
-                key={m.id}
-                href={`/measures/${m.id}`}
-                className="flex items-center gap-3 bg-[#F2F2F2] hover:bg-white hover:border-[#e5e5e5] border border-transparent rounded-xl px-4 py-3 transition-all group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm">
-                  <BarChart3 size={15} className="text-[#808285]" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-[#000000] truncate">
-                    {m.name}
-                  </p>
-                  <p className="text-xs text-[#808285]">{m.folder}</p>
-                </div>
-                <ArrowRight
-                  size={14}
-                  className="ml-auto text-[#808285] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                />
-              </Link>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
 

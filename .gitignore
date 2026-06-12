@@ -44,3 +44,4 @@ next-env.d.ts
 # local reference files (not part of the repo)
 /Brand Book/
 /PBI Model/
+/src/data/tables.ts

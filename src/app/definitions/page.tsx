@@ -18,7 +18,7 @@ const folderIcons: Record<string, string> = {
   "Coleman Forecast": "/tendencia.png",
 };
 
-function MeasuresContent() {
+function DefinitionsContent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [activeFolder, setActiveFolder] = useState<string>(
@@ -28,7 +28,6 @@ function MeasuresContent() {
     new Set(measureFolders)
   );
 
-  // Sync active folder when URL param changes (sidebar navigation)
   useEffect(() => {
     const folder = searchParams.get("folder");
     setActiveFolder(folder ?? "All");
@@ -70,9 +69,9 @@ function MeasuresContent() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#000000]">Measures</h1>
+        <h1 className="text-2xl font-bold text-[#000000]">Definitions</h1>
         <p className="text-sm text-[#808285] mt-1">
-          {measures.length} measures across {measureFolders.length} folders
+          {measures.length} definitions across {measureFolders.length} folders
         </p>
       </div>
 
@@ -85,7 +84,7 @@ function MeasuresContent() {
           />
           <input
             type="text"
-            placeholder="Search measures…"
+            placeholder="Search definitions…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-sm bg-[#F2F2F2] rounded-lg border border-transparent focus:border-[#ff6900] focus:bg-white focus:outline-none transition-colors"
@@ -127,7 +126,7 @@ function MeasuresContent() {
         </div>
       </div>
 
-      <p className="text-xs text-[#808285]">Showing {filtered.length} measures</p>
+      <p className="text-xs text-[#808285]">Showing {filtered.length} definitions</p>
 
       {/* Grouped by folder */}
       <div className="space-y-4">
@@ -163,7 +162,7 @@ function MeasuresContent() {
                   {folderMeasures.map((m) => (
                     <Link
                       key={m.id}
-                      href={`/measures/${m.id}`}
+                      href={`/definitions/${m.id}`}
                       className="flex items-center gap-3 px-5 py-3.5 bg-white hover:bg-[#F2F2F2] transition-colors group"
                     >
                       <div className="w-7 h-7 rounded-lg bg-[#F2F2F2] flex items-center justify-center shrink-0">
@@ -196,7 +195,7 @@ function MeasuresContent() {
       {filtered.length === 0 && (
         <div className="text-center py-16 text-[#808285]">
           <BarChart3 size={36} className="mx-auto mb-3 opacity-30" />
-          <p className="font-medium">No measures found</p>
+          <p className="font-medium">No definitions found</p>
           <p className="text-sm mt-1">Try a different search or folder.</p>
         </div>
       )}
@@ -204,10 +203,10 @@ function MeasuresContent() {
   );
 }
 
-export default function MeasuresPage() {
+export default function DefinitionsPage() {
   return (
     <Suspense>
-      <MeasuresContent />
+      <DefinitionsContent />
     </Suspense>
   );
 }

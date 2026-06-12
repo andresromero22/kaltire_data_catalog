@@ -3,52 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Table2, BarChart3, Bot, Home, ChevronRight, ChevronDown } from "lucide-react";
+import { BarChart3, Bot, Home, ChevronRight, ChevronDown } from "lucide-react";
 import clsx from "clsx";
 import { useState, useEffect, Suspense } from "react";
-import { tables } from "@/data/tables";
 import { measures, measureFolders } from "@/data/measures";
-
-const dimCount = tables.filter((t) => t.category === "Dimension").length;
-const factCount = tables.filter((t) => t.category === "Fact").length;
 
 const folderCounts = Object.fromEntries(
   measureFolders.map((f) => [f, measures.filter((m) => m.folder === f).length])
 );
 
-// Tables sub-nav — uses ?category= param
-function TablesSubNav() {
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category");
-
-  const items = [
-    { label: "Dimensions", param: "dimensions", count: dimCount },
-    { label: "Fact Tables", param: "fact-tables", count: factCount },
-  ];
-
-  return (
-    <div className="ml-5 mt-0.5 border-l border-[#e5e5e5] pl-3 space-y-0.5 pb-1">
-      {items.map(({ label, param, count }) => (
-        <Link
-          key={param}
-          href={`/tables?category=${param}`}
-          className={clsx(
-            "flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors",
-            activeCategory === param
-              ? "bg-white text-[#ff6900] font-medium"
-              : "text-[#808285] hover:bg-white hover:text-[#000000]"
-          )}
-        >
-          <span className="flex-1 truncate">{label}</span>
-          <span className="tabular-nums shrink-0">{count}</span>
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-// Measures sub-nav — uses ?folder= param
-function MeasuresSubNav() {
+function DefinitionsSubNav() {
   const searchParams = useSearchParams();
   const activeFolder = searchParams.get("folder");
 
@@ -57,7 +21,7 @@ function MeasuresSubNav() {
       {measureFolders.map((folder) => (
         <Link
           key={folder}
-          href={`/measures?folder=${encodeURIComponent(folder)}`}
+          href={`/definitions?folder=${encodeURIComponent(folder)}`}
           className={clsx(
             "flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors",
             activeFolder === folder
@@ -75,16 +39,13 @@ function MeasuresSubNav() {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const onTables = pathname.startsWith("/tables");
-  const onMeasures = pathname.startsWith("/measures");
+  const onDefinitions = pathname.startsWith("/definitions");
 
-  const [tablesOpen, setTablesOpen] = useState(onTables);
-  const [measuresOpen, setMeasuresOpen] = useState(onMeasures);
+  const [definitionsOpen, setDefinitionsOpen] = useState(onDefinitions);
 
   useEffect(() => {
-    if (onTables) setTablesOpen(true);
-    if (onMeasures) setMeasuresOpen(true);
-  }, [onTables, onMeasures]);
+    if (onDefinitions) setDefinitionsOpen(true);
+  }, [onDefinitions]);
 
   return (
     <aside className="w-60 shrink-0 bg-[#F2F2F2] border-r border-[#e5e5e5] flex flex-col h-screen sticky top-0">
@@ -122,76 +83,39 @@ export default function Sidebar() {
           <span className="flex-1">Home</span>
         </Link>
 
-        {/* Tables */}
+        {/* Definitions */}
         <div>
           <div
             className={clsx(
               "flex items-center rounded-lg text-sm font-medium transition-colors",
-              onTables ? "bg-white shadow-sm" : "hover:bg-white"
+              onDefinitions ? "bg-white shadow-sm" : "hover:bg-white"
             )}
           >
             <Link
-              href="/tables"
+              href="/definitions"
               className={clsx(
                 "flex items-center gap-3 flex-1 min-w-0 px-3 py-2.5",
-                onTables ? "text-[#ff6900]" : "text-[#000000] hover:text-[#ff6900]"
-              )}
-            >
-              <Table2
-                size={16}
-                className={onTables ? "text-[#ff6900] shrink-0" : "text-[#808285] shrink-0"}
-              />
-              <span>Tables</span>
-            </Link>
-            <button
-              onClick={() => setTablesOpen((v) => !v)}
-              className="shrink-0 px-2 py-2.5 rounded-r-lg hover:bg-black/5 text-[#808285]"
-              aria-label="Toggle tables sub-menu"
-            >
-              {tablesOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-            </button>
-          </div>
-
-          {tablesOpen && (
-            <Suspense fallback={null}>
-              <TablesSubNav />
-            </Suspense>
-          )}
-        </div>
-
-        {/* Measures */}
-        <div>
-          <div
-            className={clsx(
-              "flex items-center rounded-lg text-sm font-medium transition-colors",
-              onMeasures ? "bg-white shadow-sm" : "hover:bg-white"
-            )}
-          >
-            <Link
-              href="/measures"
-              className={clsx(
-                "flex items-center gap-3 flex-1 min-w-0 px-3 py-2.5",
-                onMeasures ? "text-[#ff6900]" : "text-[#000000] hover:text-[#ff6900]"
+                onDefinitions ? "text-[#ff6900]" : "text-[#000000] hover:text-[#ff6900]"
               )}
             >
               <BarChart3
                 size={16}
-                className={onMeasures ? "text-[#ff6900] shrink-0" : "text-[#808285] shrink-0"}
+                className={onDefinitions ? "text-[#ff6900] shrink-0" : "text-[#808285] shrink-0"}
               />
-              <span>Measures</span>
+              <span>Definitions</span>
             </Link>
             <button
-              onClick={() => setMeasuresOpen((v) => !v)}
+              onClick={() => setDefinitionsOpen((v) => !v)}
               className="shrink-0 px-2 py-2.5 rounded-r-lg hover:bg-black/5 text-[#808285]"
-              aria-label="Toggle measures sub-menu"
+              aria-label="Toggle definitions sub-menu"
             >
-              {measuresOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+              {definitionsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
             </button>
           </div>
 
-          {measuresOpen && (
+          {definitionsOpen && (
             <Suspense fallback={null}>
-              <MeasuresSubNav />
+              <DefinitionsSubNav />
             </Suspense>
           )}
         </div>

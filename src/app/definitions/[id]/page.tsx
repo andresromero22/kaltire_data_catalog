@@ -17,7 +17,7 @@ export function generateStaticParams() {
   return measures.map((m) => ({ id: m.id }));
 }
 
-export default async function MeasureDetailPage({
+export default async function DefinitionDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -36,12 +36,12 @@ export default async function MeasureDetailPage({
           Home
         </Link>
         <ChevronRight size={14} />
-        <Link href="/measures" className="hover:text-[#ff6900] transition-colors">
-          Measures
+        <Link href="/definitions" className="hover:text-[#ff6900] transition-colors">
+          Definitions
         </Link>
         <ChevronRight size={14} />
         <Link
-          href={`/measures?folder=${encodeURIComponent(measure.folder)}`}
+          href={`/definitions?folder=${encodeURIComponent(measure.folder)}`}
           className="hover:text-[#ff6900] transition-colors"
         >
           {measure.folder}
@@ -114,15 +114,15 @@ export default async function MeasureDetailPage({
         </div>
       )}
 
-      {/* Related measures */}
+      {/* Related definitions */}
       {related.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-[#000000] mb-3">Related Measures</h2>
+          <h2 className="text-sm font-semibold text-[#000000] mb-3">Related Definitions</h2>
           <div className="grid sm:grid-cols-2 gap-2">
             {related.map((r) => (
               <Link
                 key={r.id}
-                href={`/measures/${r.id}`}
+                href={`/definitions/${r.id}`}
                 className="flex items-center gap-3 bg-[#F2F2F2] hover:bg-white hover:border-[#e5e5e5] border border-transparent rounded-xl px-4 py-3 transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm">
