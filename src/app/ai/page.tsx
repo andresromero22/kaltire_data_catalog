@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Bot,
   Send,
-  Table2,
   BarChart3,
   ArrowRight,
   Sparkles,
@@ -18,7 +17,7 @@ interface Message {
   id: number;
   role: MessageRole;
   text: string;
-  links?: { label: string; href: string; type: "table" | "measure" | "page" }[];
+  links?: { label: string; href: string; type: "definition" | "page" }[];
 }
 
 // Keyword-based mock responses
@@ -27,54 +26,50 @@ function getResponse(input: string): Omit<Message, "id" | "role"> {
 
   if (q.includes("tire hours") || q.includes("tire life") || q.includes("hours")) {
     return {
-      text: "Tire Hours measures the total accumulated operating hours for tires in your selected context. For scrap analysis, use **Tire Hours (Scrap)**, which only includes tires that have been retired.\n\nYou'll find both measures in the **Tires** folder. For trend analysis over time, pair them with the Time Intelligence calculation group.",
+      text: "Tire Hours measures the total accumulated operating hours for tires in your selected context. For scrap analysis, use **Tire Hours (Scrap)**, which only includes tires that have been retired.\n\nYou'll find both definitions in the **Tires** folder. For trend analysis over time, pair them with the Time Intelligence calculation group.",
       links: [
-        { label: "Tire Hours", href: "/measures/tire-hours", type: "measure" },
-        { label: "Tire Hours (Scrap)", href: "/measures/tire-hours-scrap", type: "measure" },
+        { label: "Tire Hours", href: "/definitions/tire-hours", type: "definition" },
+        { label: "Tire Hours (Scrap)", href: "/definitions/tire-hours-scrap", type: "definition" },
       ],
     };
   }
 
   if (q.includes("downtime") || q.includes("availability")) {
     return {
-      text: "Downtime analysis uses measures in the **Downtime Events** folder. Key metrics are:\n\n• **Downtime Hours** — total unavailability\n• **# Downtime Events** — count of tire-related stops\n• **Downtime Hours (per 5,000 Equip. Hours)** — normalized benchmark\n\nThe **Fact Downtime and Delay** table is the source for this analysis.",
+      text: "Downtime analysis uses definitions in the **Downtime Events** folder. Key metrics are:\n\n• **Downtime Hours** — total unavailability\n• **# Downtime Events** — count of tire-related stops\n• **Downtime Hours (per 5,000 Equip. Hours)** — normalized benchmark",
       links: [
-        { label: "Downtime Hours", href: "/measures/downtime-hours", type: "measure" },
-        { label: "# Downtime Events", href: "/measures/num-downtime-events", type: "measure" },
-        { label: "Fact Downtime and Delay", href: "/tables/fact-downtime-and-delay", type: "table" },
+        { label: "Downtime Hours", href: "/definitions/downtime-hours", type: "definition" },
+        { label: "# Downtime Events", href: "/definitions/num-downtime-events", type: "definition" },
       ],
     };
   }
 
   if (q.includes("cost") || q.includes("spend") || q.includes("purchase")) {
     return {
-      text: "For cost analysis, the most impactful measure is **AVG Tire Cost per Hour** — it combines purchase cost and operational life into a single efficiency KPI.\n\n**Tire Purchase Cost** gives you total spend, while **AVG Tire Cost** gives the per-tire average.\n\nAll financial data flows from the **Fact Tire Inventory** table.",
+      text: "For cost analysis, the most impactful definition is **AVG Tire Cost per Hour** — it combines purchase cost and operational life into a single efficiency KPI.\n\n**Tire Purchase Cost** gives you total spend, while **AVG Tire Cost** gives the per-tire average.",
       links: [
-        { label: "AVG Tire Cost per Hour", href: "/measures/avg-tire-cost-per-hour", type: "measure" },
-        { label: "Tire Purchase Cost", href: "/measures/tire-purchase-cost", type: "measure" },
-        { label: "Fact Tire Inventory", href: "/tables/fact-tire-inventory", type: "table" },
+        { label: "AVG Tire Cost per Hour", href: "/definitions/avg-tire-cost-per-hour", type: "definition" },
+        { label: "Tire Purchase Cost", href: "/definitions/tire-purchase-cost", type: "definition" },
       ],
     };
   }
 
   if (q.includes("repair") || q.includes("maintenance")) {
     return {
-      text: "Repair metrics live in the **Repairs** folder. Use **# Repair Events** for volume, **Repair Cost** for spend, and **% Preventative Repair Events** to measure proactive vs. reactive maintenance.\n\nThe **Fact Repair** table stores all repair work order records.",
+      text: "Repair metrics live in the **Repairs** folder. Use **# Repair Events** for volume, **Repair Cost** for spend, and **% Preventative Repair Events** to measure proactive vs. reactive maintenance.",
       links: [
-        { label: "# Repair Events", href: "/measures/num-repair-events", type: "measure" },
-        { label: "Repair Cost", href: "/measures/repair-cost", type: "measure" },
-        { label: "Fact Repair", href: "/tables/fact-repair", type: "table" },
+        { label: "# Repair Events", href: "/definitions/num-repair-events", type: "definition" },
+        { label: "Repair Cost", href: "/definitions/repair-cost", type: "definition" },
       ],
     };
   }
 
   if (q.includes("equipment") || q.includes("fleet") || q.includes("truck")) {
     return {
-      text: "Equipment data is split between **Dim Equipment** (master attributes like make, model, category) and the fact tables for activity.\n\nUse **# Equipment** for fleet counts and **Equipment Hours** as the normalizing denominator for all rate-based KPIs.",
+      text: "Equipment metrics include **# Equipment** for fleet counts and **Equipment Hours** as the normalizing denominator for all rate-based KPIs.",
       links: [
-        { label: "Dim Equipment", href: "/tables/dim-equipment", type: "table" },
-        { label: "# Equipment", href: "/measures/num-equipment", type: "measure" },
-        { label: "Equipment Hours", href: "/measures/equipment-hours", type: "measure" },
+        { label: "# Equipment", href: "/definitions/num-equipment", type: "definition" },
+        { label: "Equipment Hours", href: "/definitions/equipment-hours", type: "definition" },
       ],
     };
   }
@@ -92,67 +87,59 @@ function getResponse(input: string): Omit<Message, "id" | "role"> {
 
   if (q.includes("location") || q.includes("site") || q.includes("mine")) {
     return {
-      text: "Location data is stored in **Dim Location**, which includes site name, country, region, customer, mine type, and system flags (TPMS, TOMS, Tiresight, etc.).\n\nUse this dimension to slice any measure by site, region, or customer.",
-      links: [
-        { label: "Dim Location", href: "/tables/dim-location", type: "table" },
-      ],
+      text: "Location data includes site name, country, region, customer, mine type, and system flags (TPMS, TOMS, Tiresight, etc.). Use location attributes to slice any definition by site, region, or customer.",
+      links: [],
     };
   }
 
   if (q.includes("date") || q.includes("time") || q.includes("month") || q.includes("year")) {
     return {
-      text: "The **Dim Date** table is the primary time dimension. It includes calendar fields (month, quarter, year) as well as fiscal year and relative offsets like Current Month and Current Year.\n\nFor intra-day analysis, use **Dim Time** with its hour and minute bins.",
-      links: [
-        { label: "Dim Date", href: "/tables/dim-date", type: "table" },
-        { label: "Dim Time", href: "/tables/dim-time", type: "table" },
-      ],
+      text: "Time analysis uses calendar fields (month, quarter, year) as well as fiscal year attributes. For intra-day analysis, hourly and minute bins are available.",
+      links: [],
     };
   }
 
   if (q.includes("rim") || q.includes("wheel")) {
     return {
-      text: "Rim data starts in **Dim Rim** for specifications (size, manufacturer, status) and **Fact Rim Inventory** for current inventory counts.\n\nKey measures: **# Rims**, **# Rims (Installed)**, and **% Installed Rims**.",
+      text: "Rim metrics include **# Rims**, **# Rims (Installed)**, and **% Installed Rims**.",
       links: [
-        { label: "Dim Rim", href: "/tables/dim-rim", type: "table" },
-        { label: "# Rims", href: "/measures/num-rims", type: "measure" },
-        { label: "% Installed Rims", href: "/measures/pct-installed-rims", type: "measure" },
+        { label: "# Rims", href: "/definitions/num-rims", type: "definition" },
+        { label: "% Installed Rims", href: "/definitions/pct-installed-rims", type: "definition" },
       ],
     };
   }
 
   if (q.includes("table") || q.includes("schema") || q.includes("model")) {
     return {
-      text: "The Service Delivery model contains **28 tables** in the Gold_ServiceDelivery schema — 11 Dimension tables, 15 Fact tables, and 2 Other tables (Exchange Rate, Users).\n\nHead to the Tables section to browse them all.",
+      text: "The Service Delivery model contains 28 tables in the Gold_ServiceDelivery schema — 11 Dimension tables, 15 Fact tables, and 2 Other tables (Exchange Rate, Users).\n\nHead to the Definitions section to explore the measures and KPIs built from this model.",
       links: [
-        { label: "Browse Tables", href: "/tables", type: "page" },
+        { label: "Browse Definitions", href: "/definitions", type: "page" },
       ],
     };
   }
 
   if (q.includes("measure") || q.includes("kpi") || q.includes("metric")) {
     return {
-      text: "The model has **51 measures** organized in 7 folders: Tires, Repairs, Downtime Events, Rims, Equipment, Inspections, and Coleman Forecast.\n\nBrowse the Measures section to explore them all, grouped by folder.",
+      text: "The model has **51 definitions** organized in 7 folders: Tires, Repairs, Downtime Events, Rims, Equipment, Inspections, and Coleman Forecast.\n\nBrowse the Definitions section to explore them all, grouped by folder.",
       links: [
-        { label: "Browse Measures", href: "/measures", type: "page" },
+        { label: "Browse Definitions", href: "/definitions", type: "page" },
       ],
     };
   }
 
   if (q.includes("hello") || q.includes("hi") || q.includes("help")) {
     return {
-      text: "Hi! I'm the Kaltire Data Catalog AI Assistant (MVP).\n\nI can help you:\n• **Find tables and columns** — ask about tire data, equipment, locations, dates…\n• **Understand measures** — ask about KPIs like tire hours, cost per hour, downtime…\n• **Navigate the model** — I'll point you to the right place\n\nWhat would you like to explore?",
+      text: "Hi! I'm the Kaltire Data Catalog AI Assistant (MVP).\n\nI can help you:\n• **Find definitions** — ask about tire performance, cost, downtime, repairs…\n• **Understand KPIs** — ask about metrics like tire hours, cost per hour, efficiency rates…\n• **Navigate the model** — I'll point you to the right definitions\n\nWhat would you like to explore?",
       links: [
-        { label: "Tables", href: "/tables", type: "page" },
-        { label: "Measures", href: "/measures", type: "page" },
+        { label: "Definitions", href: "/definitions", type: "page" },
       ],
     };
   }
 
   return {
-    text: "I'm not sure about that specific topic yet, but I can help with:\n\n• **Tire performance** — hours, tread depth, cost per hour\n• **Downtime analysis** — events, hours, normalized rates\n• **Equipment & fleet** — counts, status, hours\n• **Repairs** — cost, preventative vs. corrective\n• **Locations & sites** — mine sites, regions, customers\n• **Dates & time** — calendar, fiscal year, time intelligence\n\nTry asking one of those topics and I'll point you to the right tables and measures.",
+    text: "I'm not sure about that specific topic yet, but I can help with:\n\n• **Tire performance** — hours, tread depth, cost per hour\n• **Downtime analysis** — events, hours, normalized rates\n• **Equipment & fleet** — counts, status, hours\n• **Repairs** — cost, preventative vs. corrective\n• **Locations & sites** — mine sites, regions, customers\n• **Dates & time** — calendar, fiscal year, time intelligence\n\nTry asking one of those topics and I'll point you to the right definitions.",
     links: [
-      { label: "Browse Tables", href: "/tables", type: "page" },
-      { label: "Browse Measures", href: "/measures", type: "page" },
+      { label: "Browse Definitions", href: "/definitions", type: "page" },
     ],
   };
 }
@@ -172,10 +159,9 @@ export default function AiPage() {
     {
       id: msgId++,
       role: "assistant",
-      text: "Hi! I'm the Kaltire Data Catalog AI Assistant.\n\nAsk me about tables, measures, KPIs, or anything about the Service Delivery model and I'll help you navigate it.",
+      text: "Hi! I'm the Kaltire Data Catalog AI Assistant.\n\nAsk me about definitions, KPIs, or anything about the Service Delivery model and I'll help you navigate it.",
       links: [
-        { label: "Browse Tables", href: "/tables", type: "page" },
-        { label: "Browse Measures", href: "/measures", type: "page" },
+        { label: "Definitions", href: "/definitions", type: "page" },
       ],
     },
   ]);
@@ -269,15 +255,12 @@ export default function AiPage() {
                       href={link.href}
                       className={clsx(
                         "inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors",
-                        link.type === "table"
-                          ? "bg-[#fff0e6] text-[#ff6900] hover:bg-[#ffe4cc]"
-                          : link.type === "measure"
+                        link.type === "definition"
                           ? "bg-white border border-[#e5e5e5] text-[#000000] hover:border-[#ff6900] hover:text-[#ff6900]"
                           : "bg-[#F2F2F2] text-[#000000] hover:bg-[#e5e5e5]"
                       )}
                     >
-                      {link.type === "table" && <Table2 size={11} />}
-                      {link.type === "measure" && <BarChart3 size={11} />}
+                      {link.type === "definition" && <BarChart3 size={11} />}
                       {link.type === "page" && <ArrowRight size={11} />}
                       {link.label}
                     </Link>
@@ -339,7 +322,7 @@ export default function AiPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send(input)}
-          placeholder="Ask about tables, measures, KPIs…"
+          placeholder="Ask about definitions, KPIs…"
           className="flex-1 px-3 py-2 text-sm bg-transparent focus:outline-none placeholder:text-[#808285]"
         />
         <button
