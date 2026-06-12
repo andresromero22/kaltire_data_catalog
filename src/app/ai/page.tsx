@@ -78,9 +78,9 @@ function getResponse(input: string): Omit<Message, "id" | "role"> {
     return {
       text: "Tread depth analysis uses **AVG Tire RTD** for current fleet condition and **AVG Tire RTD (Scrap)** to evaluate whether tires are being removed with significant tread remaining.\n\n**% Tread Utilization Zero** shows how efficiently the fleet extracts tread — higher is better.",
       links: [
-        { label: "AVG Tire RTD", href: "/measures/avg-tire-rtd", type: "measure" },
-        { label: "AVG Tire RTD (Scrap)", href: "/measures/avg-tire-rtd-scrap", type: "measure" },
-        { label: "% Tread Utilization Zero", href: "/measures/pct-tread-utilization-zero", type: "measure" },
+        { label: "AVG Tire RTD", href: "/definitions/avg-tire-rtd", type: "definition" },
+        { label: "AVG Tire RTD (Scrap)", href: "/definitions/avg-tire-rtd-scrap", type: "definition" },
+        { label: "% Tread Utilization Zero", href: "/definitions/pct-tread-utilization-zero", type: "definition" },
       ],
     };
   }
